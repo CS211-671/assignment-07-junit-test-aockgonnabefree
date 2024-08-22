@@ -1,5 +1,7 @@
 package ku.cs.models;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 import java.util.ArrayList;
 
 public class UserList {
@@ -29,12 +31,27 @@ public class UserList {
     //TODO: implements this method to change user's password to newPassword by verified oldPassword
     //TODO: return true if process is completed, otherwise return false
     public boolean changePassword(String username, String oldPassword, String newPassword) {
+        User user = findUserByUsername(username);
+        if (user != null) {
+            boolean verified = user.validatePassword(oldPassword);
+            if (verified) {
+                user.setPassword(newPassword);
+                return verified;
+            }
+        }
         return false;
     }
 
     //TODO: implements this method to find user in users with valid password
     //TODO: return User object if username and password is correct, otherwise return null
     public User login(String username, String password) {
+        User user = findUserByUsername(username);
+        if (user != null) {
+            boolean verified = user.validatePassword(password);
+            if (verified) {
+                return user;
+            }
+        }
         return null;
     }
 }
